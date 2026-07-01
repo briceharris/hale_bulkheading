@@ -117,7 +117,7 @@
           <p class="label">How We Work</p>
           <h2 class="section-title">What You Can Expect</h2>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px;">
+        <div class="values-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px;">
           <div style="text-align:center; padding:32px 24px;" class="reveal reveal-delay-1">
             <div style="width:56px; height:56px; background:var(--white); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:var(--green-mid); box-shadow:var(--shadow-sm);">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:26px;height:26px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
@@ -236,7 +236,8 @@
               <h3>Send Us a Message</h3>
               <p>We'll follow up within one business day.</p>
 
-              <form id="contact-form" novalidate>
+              <form id="contact-form" action="https://formspree.io/f/mojokpkq" method="POST" novalidate>
+                <input type="hidden" name="_subject" value="New inquiry — Hale Bulkheading">
                 <div class="form-row">
                   <div class="form-group">
                     <label for="first-name">First Name</label>

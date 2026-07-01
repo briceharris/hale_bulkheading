@@ -19,7 +19,24 @@ if (nav) {
 // ── Mobile menu ───────────────────────────────────────────
 const hamburger = document.querySelector('.nav__hamburger');
 const mobileMenu = document.querySelector('.nav__mobile');
+
+function closeMobileMenu() {
+  mobileMenu.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  // Restore transparent nav on home page when scrolled to top
+  if (nav && window.scrollY <= 60 && nav.classList.contains('nav--was-transparent')) {
+    nav.classList.add('nav--transparent');
+    nav.classList.remove('nav--solid');
+  }
+}
+
 if (hamburger && mobileMenu) {
+  // Track whether nav started transparent (home page)
+  if (nav && nav.classList.contains('nav--transparent')) {
+    nav.classList.add('nav--was-transparent');
+  }
+
   hamburger.addEventListener('click', () => {
     const open = mobileMenu.classList.toggle('open');
     hamburger.setAttribute('aria-expanded', open);
@@ -28,19 +45,28 @@ if (hamburger && mobileMenu) {
       spans[0].style.transform = 'translateY(7px) rotate(45deg)';
       spans[1].style.opacity   = '0';
       spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+      // Keep nav solid while menu is open
+      if (nav) {
+        nav.classList.add('nav--solid');
+        nav.classList.remove('nav--transparent');
+      }
     } else {
-      spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+      closeMobileMenu();
     }
   });
 
-  // close on link click
+  // Close on link click
   mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', 'false');
-      const spans = hamburger.querySelectorAll('span');
-      spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
-    });
+    a.addEventListener('click', () => closeMobileMenu());
+  });
+
+  // Close on click outside
+  document.addEventListener('click', (e) => {
+    if (mobileMenu.classList.contains('open') &&
+        !mobileMenu.contains(e.target) &&
+        !hamburger.contains(e.target)) {
+      closeMobileMenu();
+    }
   });
 }
 
@@ -117,17 +143,39 @@ filterBtns.forEach(btn => {
 // ── Contact form ──────────────────────────────────────────
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('.form-submit');
-    btn.textContent = 'Message Sent!';
-    btn.style.background = 'var(--green-light)';
+    const original = btn.textContent;
+    btn.textContent = 'Sending…';
     btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = 'Send Message';
-      btn.style.background = '';
-      btn.disabled = false;
-      contactForm.reset();
-    }, 3500);
+
+    try {
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { Accept: 'application/json' }
+      });
+      if (res.ok) {
+        btn.textContent = 'Message Sent!';
+        btn.style.background = 'var(--green-light)';
+        contactForm.reset();
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 4000);
+      } else {
+        throw new Error();
+      }
+    } catch {
+      btn.textContent = 'Failed — please try again';
+      btn.style.background = '#8B2020';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 4000);
+    }
   });
 }

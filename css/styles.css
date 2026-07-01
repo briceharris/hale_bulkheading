@@ -266,6 +266,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   border-top: 1px solid rgba(255,255,255,0.1);
   flex-direction: column;
   gap: 4px;
+  z-index: 99;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 .nav__mobile.open {
   display: flex;
@@ -1349,10 +1351,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .form-row { grid-template-columns: 1fr; }
   .contact-form { padding: 28px; }
   .footer__grid { grid-template-columns: 1fr; }
+
+  /* About page inline-style grids */
+  .values-grid { grid-template-columns: 1fr !important; }
+  .about-story__grid img { aspect-ratio: 3/2 !important; }
 }
 
 @media (max-width: 480px) {
   .hero__actions { flex-direction: column; align-items: flex-start; }
   .gallery-masonry { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: 1fr; }
+
+  /* Tighten stats bar on very small screens */
+  .stat-item { padding: 20px 16px; }
+  .stat-item__number { font-size: 2rem; }
 }
